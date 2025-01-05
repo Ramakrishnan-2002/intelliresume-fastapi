@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resume</title>
+  <meta name="keywords" content="professional resume template, resume template">
+  <meta name="description" content="A professional resume template in HTML and CSS">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(45deg, #ecf0f3, #f7f8fa);
+    }
+
+    .container {
+      width: 100%;
+      max-width: 190mm; /* Slightly less than A4 width */
+      min-height: 297mm; /* A4 height */
+      margin: 0 auto;
+      padding: 20mm; /* Prevent content from being too close to the edges */
+      background-color: #fff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      border-radius: 5px;
+      overflow: hidden;
+      word-wrap: break-word;
+    }
+
+    .header {
+      text-align: center;
+      background: linear-gradient(45deg, #3498db, #2ecc71);
+      color: #fff;
+      padding: 20px;
+      border-top-left-radius: 5px;
+      border-top-right-radius: 5px;
+    }
+
+    .header h1 {
+      font-size: 28px;
+      margin: 0;
+    }
+
+    .contact-info {
+      font-size: 16px;
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    .contact-info p {
+      margin: 5px 0;
+    }
+
+    .contact-info a {
+      text-decoration: none;
+      margin: 0 10px;
+      font-weight: bold;
+    }
+
+    .contact-info a#linkedin,
+    .contact-info a#email,
+    .contact-info a#github {
+      color: #fff;
+    }
+
+    .section {
+      margin-top: 20px;
+      padding: 20px;
+      border: 1px solid #ccc;
+      background-color: #fff;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+      border-radius: 5px;
+      page-break-inside: avoid;
+    }
+
+    .section h2 {
+      font-size: 24px;
+      margin-top: 0;
+      color: #3498db;
+    }
+
+    .section ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .section ul li {
+      margin: 5px 0;
+    }
+
+    .skills,
+    .education,
+    .projects {
+      columns: 2;
+      -webkit-columns: 2;
+      -moz-columns: 2;
+    }
+
+    /* Style for editable elements */
+    
+
+    @media print {
+      body {
+        background: #fff;
+      }
+
+      .container {
+        box-shadow: none;
+        border: none;
+        page-break-before: auto;
+        page-break-after: auto;
+      }
+
+      .header {
+        background: transparent;
+        color: #000;
+      }
+
+      .contact-info a {
+        color: #000;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+        <h1 id="name">{{name}}</h1>
+        <div class="contact-info">
+          <p>
+            <span id="phone" class="ats-hidden"><h0 class="profile-icon">☎</h0>{{phone}}</span>
+            <span id="location" class="ats-hidden"><h0 class="profile-icon">📍</h0>{{location}}</span>
+          </p>
+          <p>
+            <a href="mailto:{{email}}" id="email"><h0 target="_blank" class="profile-icon"></h0>Email</a>
+            <a href="{{linkedin}}" id="linkedin" target="_blank"><h0 class="profile-icon">LinkedIn</h0></a>
+            <a href="{{github}}" id="github" target="_blank"><h0 class="profile-icon">GitHub</h0></a>
+          </p>
+        </div>
+      </header>
+    <section class="section">
+      <h2>Professional Summary</h2>
+      <!-- Ensure the summary content is rendered as editable -->
+      <!--p id="summary" contenteditable="true">{{ summary|safe }}</p> <!-- Existing content should be editable -->
+      <ul id="summary">
+        <li contenteditable="true">{{summary|safe}}</li>
+      </ul>
+    </section>
+    <section class="section">
+      <h2>Work History</h2>
+      <ul id="work-history">
+        <li contenteditable="true">{{ work|safe }}</li> <!-- Existing content is editable -->
+      </ul>
+    </section>
+    <section class="section">
+      <h2>Skills</h2>
+      <!-- Ensure skills are editable -->
+      <!--p id="skills" contenteditable="true">{{ skills|safe }}</p> <!-- Existing content should be editable -->
+      <ul id="skills">
+        <li contenteditable="true">{{skills|safe}}</li>
+      </ul>
+    </section>
+    <section class="section">
+      <h2>Education</h2>
+      <ul class="education" id="education">
+        <li contenteditable="true">{{ education|safe }}</li> <!-- Existing content is editable -->
+      </ul>
+    </section>
+    <section class="section">
+      <h2>Projects</h2>
+      <!-- Ensure projects are editable -->
+      <!--p id="project-description" contenteditable="true" style="white-space: pre-wrap; display: block; min-height: 30px; border: 1px dashed #ccc; padding: 5px;">{{ proj |safe}}</p> <!-- Existing content should be editable -->
+        <ul class="project-description" id="project-description">
+            <li contenteditable="true">{{proj|safe}}</li>
+        </ul>
+    
+    </section>
+    <section class="section">
+      <h2>Certifications</h2>
+      <ul class="certifications" id="certifications">
+        <li contenteditable="true">{{ cert|safe }}</li> <!-- Existing content is editable -->
+      </ul>
+    </section>
+  </div>
+  <div style="position: fixed; bottom: 20px; left: 20px;">
+    <button onclick="goBack()" style="padding: 10px 20px; font-size: 16px; background: #2ecc71; color: #fff; border: none; border-radius: 5px; cursor: pointer;">
+      Back to Dashboard
+    </button>
+  </div>
+  
+  <div style="position: fixed; bottom: 20px; right: 20px;">
+    <button onclick="exportToPDF()" style="padding: 10px 20px; font-size: 16px; background: #3498db; color: #fff; border: none; border-radius: 5px; cursor: pointer;">
+      Download PDF
+    </button>
+  </div>
+  
+
+  <script>
+document.querySelectorAll('[contenteditable="true"]').forEach((element) => {
+  element.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault(); // Prevent the creation of new blocks
+      document.execCommand('insertLineBreak'); // Insert a line break instead
+    }
+  });
+});
+
+function goBack() {
+  window.location.href = "/dashboard"; // Redirect to the dashboard page
+}
+
+
+
+
+function exportToPDF() {
+  const element = document.querySelector('.container');
+  
+  // Dynamically calculate the width and height of the element
+  const elementWidth = element.offsetWidth; // Get width in pixels
+  const elementHeight = element.offsetHeight; // Get height in pixels
+
+  // Convert pixels to millimeters (for jsPDF)
+  const pxToMm = 0.264583; // 1px = 0.264583mm
+  const pdfWidth = elementWidth * pxToMm;
+  const pdfHeight = elementHeight * pxToMm;
+
+  const options = {
+    margin: 0, // No additional margins
+    filename: 'Resume.pdf',
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2, useCORS: true }, // Higher scale for better quality
+    jsPDF: { unit: 'mm', format: [pdfWidth, pdfHeight] } // Use calculated dimensions
+  };
+
+  html2pdf().set(options).from(element).save();
+}
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chatbot</title>
+<style>
+  :root {
+    --background-light: #e2e2e2; /* Light mode background color */
+    --background-dark: #121212;  /* Dark mode background color */
+    --chat-background-light: #ffffff;
+    --chat-background-dark: #1e1e1e;
+    --button-color-light: #5a98d8;
+    --button-color-dark: #1a73e8;
+    --text-color-light: #333;
+    --text-color-dark: #f1f1f1;
+    --toggle-border-light: #6a6a6a;
+    --toggle-border-dark: #929292;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    transition: background-color 0.3s;
+    background-color: var(--background-light); /* Solid background color */
+  }
+
+  .chat-container {
+    width: 500px; /* Set the desired width */
+    border-radius: 8px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    transition: all 0.3s ease-in-out;
+}
+
+
+  .chat-container:hover {
+    transform: translateY(-10px);
+  }
+
+  .header {
+    font-size: x-large;
+    background-color: var(--button-color-light);
+    color: white;
+    padding: 20px;
+    text-align: center;
+    transition: background-color 0.3s;
+  }
+
+  .chat-window {
+    display: flex;
+    flex-direction: column;
+    height: 300px;
+    overflow: auto;
+    padding: 20px;
+    background-color: var(--chat-background-light);
+    transition: background-color 0.3s;
+  }
+
+  .message {
+    margin-bottom: 20px;
+    padding: 10px 15px;
+    background-color: #ffffff;
+    border-radius: 15px;
+    width: fit-content;
+    transition: background-color 0.3s;
+  }
+
+  .bot-message {
+    align-self: flex-start;
+    background-color: var(--button-color-light);
+    color: white;
+    animation: fadeIn 0.5s ease-out;
+  }
+
+  .user-message {
+    align-self: flex-end;
+    background-color: var(--background-light);
+    color: var(--text-color-light);
+    align-self: flex-end;
+    animation: fadeIn 0.5s ease-out;
+  }
+
+  .input-area {
+    display: flex;
+    padding: 20px;
+    background-color: var(--chat-background-light);
+    transition: background-color 0.3s;
+    width: 100%; /* Set width to 100% */
+}
+
+.input-field {
+    flex-grow: 1;
+    padding: 10px;
+    border: 2px solid var(--toggle-border-light);
+    border-radius: 15px;
+    margin-right: 15px;
+    transition: border-color 0.3s, background-color 0.3s, color 0.3s;
+    width: 100%; /* Set width to 100% */
+}
+
+  .send-button {
+    background-color: var(--button-color-light);
+    color: white;
+    border: none;
+    border-radius: 15px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  .theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    align-items: center;
+    font-size: 1.5em;
+  }
+
+  .toggle-button {
+    cursor: pointer;
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+    background-color: var(--toggle-border-light);
+    border-radius: 34px;
+    margin-left: 10px;
+    transition: background-color 0.3s;
+  }
+
+  .toggle-button:before {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 28px;
+    height: 28px;
+    background-color: white;
+    border-radius: 50%;
+    transition: transform 0.3s;
+  }
+
+  .dark-mode .toggle-button:before {
+    transform: translateX(26px);
+  }
+
+  .dark-mode {
+    --background-light: #121212;
+    --background-dark: #e2e2e2;
+    --chat-background-light: #1e1e1e;
+    --chat-background-dark: #ffffff;
+    --button-color-light: #1a73e8;
+    --button-color-dark: #5a98d8;
+    --text-color-light: #f1f1f1;
+    --text-color-dark: #333;
+    --toggle-border-light: #929292;
+    --toggle-border-dark: #6a6a6a;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .chat-window {
+    display: flex;
+    flex-direction: column;
+    height: 400px;  /* Set the desired height */
+    overflow: auto;
+    padding: 20px;
+    background-color: var(--chat-background-light);
+    transition: background-color 0.3s;
+}
+
+</style>
+</head>
+<body>
+  <div class="theme-toggle">
+    <div id="light-theme-icon" class="icon sun-icon">☀️</div>
+    <div class="toggle-button" id="theme-toggle-button"></div>
+    <div id="dark-theme-icon" class="icon moon-icon">🌙</div>
+  </div>
+  <div class="chat-container">
+    <div class="header">IntelliAI</div>
+    <div class="chat-window" id="chat-window">
+      <div class="message bot-message">Hello! How can I assist you today?</div>
+      <!-- New messages will be appended here by JavaScript -->
+    </div>
+    <div class="input-area">
+      <input type="text" name="chat" id="chat" class="input-field" placeholder="Type your message here...">
+      <button class="send-button">Send</button>
+    </div>
+  </div>
+  <div style="position: fixed; bottom: 20px; left: 20px;">
+    <button onclick="goBack()" style="padding: 10px 20px; font-size: 16px; background: #2ecc71; color: #fff; border: none; border-radius: 5px; cursor: pointer;">
+      Back to Dashboard
+    </button>
+  </div>
+  <script>
+    const themeToggleButton = document.getElementById('theme-toggle-button');
+    const lightThemeIcon = document.getElementById('light-theme-icon');
+    const darkThemeIcon = document.getElementById('dark-theme-icon');
+
+    themeToggleButton.addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+      lightThemeIcon.style.display = document.body.classList.contains('dark-mode') ? 'none' : 'block';
+      darkThemeIcon.style.display = document.body.classList.contains('dark-mode') ? 'block' : 'none';
+    });
+
+    document.querySelector('.input-field').addEventListener('keydown', function(event) {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        document.querySelector('.send-button').click();
+      }
+    });
+
+    document.querySelector('.send-button').addEventListener('click', function() {
+      const chatInput = document.getElementById('chat');
+      const userMessageText = chatInput.value.trim();
+
+      if (userMessageText === '') {
+        return;
+      }
+
+      chatInput.value = '';
+
+      const chatWindow = document.getElementById('chat-window');
+      const userMessage = document.createElement('div');
+      userMessage.classList.add('message', 'user-message');
+      userMessage.textContent = userMessageText;
+      chatWindow.appendChild(userMessage);
+
+      chatWindow.scrollTop = chatWindow.scrollHeight;
+
+      const accessToken = getCookie('access_token');
+
+      if (!accessToken) {
+        alert('Authentication token missing. Please log in again.');
+        return;
+      }
+
+      fetch('/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`
+        },
+        body: JSON.stringify({ chat: userMessageText })
+      })
+      .then(response => response.json())
+      .then(data => {
+        const botMessage = document.createElement('div');
+        botMessage.classList.add('message', 'bot-message');
+        botMessage.textContent = data.bot;
+        chatWindow.appendChild(botMessage);
+
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+      })
+      .catch(error => console.error('Error:', error));
+    });
+
+    function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    }
+
+
+
+    function goBack() {
+  window.location.href = "/dashboard"; // Redirect to the dashboard page
+}
+
+
+
+  </script>
+</body>
+</html>
